@@ -23,19 +23,19 @@ int main(int argc, char** argv) {
                 if (line.substr(5,3) == "max") {
                     int id = 1;
                     int count = 0;
-                    if (line.substr(9,3) == "men") { // find max men query
+                    if (line.substr(9,4) == "male") { // find max men query
                         id = 3;
-                        count = getIntFromString(line.substr(13, line.length() - 13));
+                        count = getIntFromString(line.substr(14, line.length() - 14));
 
                         // echo query
-                        std::cout << "Query: find max men " << count << "\n" << std::endl;
+                        std::cout << "Query: find max male " << count << "\n" << std::endl;
                         std::cout << "Top " << count << " occupations in " << argv[1] << " for male workers:" << std::endl;
-                    } else if (line.substr(9,5) == "women") { // find max women query
+                    } else if (line.substr(9,6) == "female") { // find max women query
                         id = 2;
-                        count = getIntFromString(line.substr(15, line.length() - 15));
+                        count = getIntFromString(line.substr(16, line.length() - 16));
 
                         // echo query
-                        std::cout << "Query: find max women " << count << "\n" << std::endl;
+                        std::cout << "Query: find max female " << count << "\n" << std::endl;
                         std::cout << "Top " << count << " occupations in " << argv[1] << " for female workers:" << std::endl;
                     } else if (line.substr(9,5) == "total") { // find max total query
                         id = 1;
