@@ -1,6 +1,7 @@
 #include "defns.h"
 #include "Utility.h"
 #include "MaxHeap.h"
+#include "BinarySearchTree.h"
 
 #include <iostream>
 #include <string>
@@ -15,8 +16,15 @@ int main(int argc, char** argv) {
         int k = 0; // number of query
 
         // create earnings array
-        struct earnings earningsArr[60];
+        earnings earningsArr[60];
         BUILD_EARNINGS_ARR(earningsArr);
+
+        // create hashmap and bst
+        //int length = getHashMapArrLength(argv[1]);
+        //hash_table_entry* hashTable[length];
+        //bst* bstRoot = BUILD_BST(argv[1], *hashTable);
+        //inorder(bstRoot);
+
 
         for (std::string line; std::getline(std::cin, line);) {
             if (line.substr(0,4) == "find") {
@@ -50,12 +58,6 @@ int main(int argc, char** argv) {
                     int n = findLengthOfHeapArr(argv[1]);
                     SOC array[n]; //create in for loop, deletes each iteration
                     SOC* heapArr = array;
-                    // reset char arrays
-                    for (int i = 0; i < n; i++) {
-                        for (int j = 0; j < OCC_LEN; j++) {
-                            heapArr[i].occupation[j] = '\0';
-                        }
-                    }
                     BUILD_MAX_ARR(argv[1], heapArr);
                     BUILD_MAX_HEAP(heapArr, n, id);
 
@@ -90,8 +92,8 @@ int main(int argc, char** argv) {
                     for (int i = 0; i < queryCount; i++) {
                         std::string femaleOverMale = findRatio(earningsArr, year);
                         std::cout << "\t" << year << ": " <<
-                        femaleOverMale.substr(2, 2) << "." <<  femaleOverMale.substr(4, 1)
-                        << "%" << std::endl;
+                                  femaleOverMale.substr(2, 2) << "." <<  femaleOverMale.substr(4, 1)
+                                  << "%" << std::endl;
 
                         year++;
                     }

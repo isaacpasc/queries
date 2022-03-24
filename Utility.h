@@ -12,4 +12,6 @@ int findLengthOfHeapArr(std::string);
 std::string formatWithCommas(int);
 std::string findRatio(earnings*, int);
 void BUILD_EARNINGS_ARR(earnings*);
+bool testForPrime(int);
+int getHashMapArrLength(std::string);
 #endif //PROJECT_2_UTILITY_H

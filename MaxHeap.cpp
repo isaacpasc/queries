@@ -33,14 +33,14 @@ void MAX_HEAPIFY(SOC* heapArr, int i, int n, int id) {
         // if left child is larger
         if ((left < n && heapArr[left].female > heapArr[largest].female) ||
             (left < n && heapArr[left].female == heapArr[largest].female &&
-            std::strcmp(heapArr[left].occupation, heapArr[largest].occupation) > 0)) {
+             std::strcmp(heapArr[left].occupation, heapArr[largest].occupation) > 0)) {
             largest = left;
         }
 
         // if right child is largest
         if ((right < n && heapArr[right].female > heapArr[largest].female) ||
             (right < n && heapArr[right].female == heapArr[largest].female &&
-            std::strcmp(heapArr[right].occupation, heapArr[largest].occupation) > 0)) {
+             std::strcmp(heapArr[right].occupation, heapArr[largest].occupation) > 0)) {
             largest = right;
         }
     }
@@ -50,14 +50,14 @@ void MAX_HEAPIFY(SOC* heapArr, int i, int n, int id) {
         // if left child is larger
         if ((left < n && heapArr[left].male > heapArr[largest].male) ||
             (left < n && heapArr[left].male == heapArr[largest].male &&
-            std::strcmp(heapArr[left].occupation, heapArr[largest].occupation) > 0)) {
+             std::strcmp(heapArr[left].occupation, heapArr[largest].occupation) > 0)) {
             largest = left;
         }
 
         // if right child is largest
         if ((right < n && heapArr[right].male > heapArr[largest].male) ||
             (right < n && heapArr[right].male == heapArr[largest].male &&
-            std::strcmp(heapArr[right].occupation, heapArr[largest].occupation) > 0)) {
+             std::strcmp(heapArr[right].occupation, heapArr[largest].occupation) > 0)) {
             largest = right;
         }
     }

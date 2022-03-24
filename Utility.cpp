@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <math.h>
 
 void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
     std::ifstream inFile;
@@ -14,7 +15,7 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
     std::string line;
 
     // skip 5 lines
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 5; i++) {
         std::getline(inFile, line);
     }
 
@@ -33,11 +34,15 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
             // check if end of line
             if (i == line.length() - 1) {
                 if (subIndex == 0) {
+
                     for (int j = 0; j < finalCell.length(); j++) {
                         heapArr[index].occupation[j] = finalCell[j];
                     }
                 }
                 if (subIndex == 1) {
+                    for (int j = 0; j < CODE_LEN; j++) {
+                        heapArr[index].SOC_code[j] = '\0';
+                    }
                     for (int j = 0; j < finalCell.length(); j++) {
                         heapArr[index].SOC_code[j] = finalCell[j];
                     }
@@ -70,11 +75,15 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
             if (!insideQuote) {
                 if (line[i] == ',') {
                     if (subIndex == 0) {
+                        
                         for (int j = 0; j < finalCell.length(); j++) {
                             heapArr[index].occupation[j] = finalCell[j];
                         }
                     }
                     if (subIndex == 1) {
+                        for (int j = 0; j < CODE_LEN; j++) {
+                            heapArr[index].SOC_code[j] = '\0';
+                        }
                         for (int j = 0; j < finalCell.length(); j++) {
                             heapArr[index].SOC_code[j] = finalCell[j];
                         }
@@ -151,7 +160,7 @@ void BUILD_EARNINGS_ARR(earnings* earningsArr) {
     std::string line;
 
     // skip 8 lines
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 8; i++) {
         std::getline(inFile, line);
     }
 
@@ -260,4 +269,36 @@ void BUILD_EARNINGS_ARR(earnings* earningsArr) {
 std::string findRatio(earnings* earningsArr, int year) {
     int i = 2019 - year;
     return std::to_string((float)earningsArr[i].female_earnings/(float)earningsArr[i].male_earnings);
+}
+
+bool testForPrime(int val) {
+    int limit, factor = 2;
+
+    limit = (long)( sqrtf( (float) val ) + 0.5f );
+    while( (factor <= limit) && (val % factor) )
+        factor++;
+
+    return( factor > limit );
+}
+
+int getHashMapArrLength(std::string year) {
+    int n = findLengthOfHeapArr(year);
+    n = n + 1;
+
+    // skip 5 lines
+    n = n - 5;
+
+    n = n * 3;
+    n = n + 1;
+
+    bool isNotPrime = true;
+    while(isNotPrime) {
+        if (testForPrime(n)) {
+            isNotPrime = false;
+        } else {
+            n++;
+        }
+    }
+
+    return n;
 }
