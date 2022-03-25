@@ -2,6 +2,7 @@
 #include "Utility.h"
 #include "MaxHeap.h"
 #include "BinarySearchTree.h"
+#include "HashTable.h"
 
 #include <iostream>
 #include <string>
@@ -16,14 +17,18 @@ int main(int argc, char** argv) {
         int k = 0; // number of query
 
         // create earnings array
-        earnings earningsArr[60];
+        struct earnings earningsArr[60];
         BUILD_EARNINGS_ARR(earningsArr);
 
         // create hashmap and bst
-        //int length = getHashMapArrLength(argv[1]);
-        //hash_table_entry* hashTable[length];
-        //bst* bstRoot = BUILD_BST(argv[1], *hashTable);
-        //inorder(bstRoot);
+        int m = getHashMapArrLength(argv[1]);
+        hash_table_entry* hashTable[m];
+        for (int i = 0; i < m; i++) {
+            hashTable[i] = nullptr;
+        }
+        bst* bstRoot = BUILD_BST(argv[1]);
+        inorderBuildHashTable(bstRoot, hashTable, m);
+
 
 
         for (std::string line; std::getline(std::cin, line);) {
@@ -92,17 +97,37 @@ int main(int argc, char** argv) {
                     for (int i = 0; i < queryCount; i++) {
                         std::string femaleOverMale = findRatio(earningsArr, year);
                         std::cout << "\t" << year << ": " <<
-                                  femaleOverMale.substr(2, 2) << "." <<  femaleOverMale.substr(4, 1)
-                                  << "%" << std::endl;
+                        femaleOverMale.substr(2, 2) << "." <<  femaleOverMale.substr(4, 1)
+                        << "%" << std::endl;
 
                         year++;
                     }
 
                 } else if (line.substr(5,10) == "occupation") { // find occupation query
-
+                    std::string codeToFind = line.substr(16, 7);
+                    std::cout << "Query: find occupation " << codeToFind << '\n' << std::endl;
+                    std::cout << "The occupation with SOC code " << codeToFind << ":" << std::endl;
+                    hash_table_entry* occupation = findSOC(hashTable, codeToFind, m);
+                    if (occupation) {
+                        std::cout << "\t" << occupation->node->soc.occupation << ": YRFT: " << formatWithCommas(occupation->node->soc.total) <<
+                        ", Female: " << formatWithCommas(occupation->node->soc.female) << ", Male: " << formatWithCommas(occupation->node->soc.male) << std::endl;
+                    } else {
+                        // no matching soc code found
+                        std::cout << "Occupation with SOC code " << codeToFind << " not found" << std::endl;
+                    }
                 }
             } else if (line.substr(0, 5) == "range") { // range query
-
+                std::string words = line.substr(17, line.length() - 17);
+                std::string low = getQuotedRange(words, true);
+                std::string high = getQuotedRange(words, false);
+                std::cout << "Query: range occupation " << words << '\n' << std::endl;
+                std::cout << "The occupations in the range \"" << low << "\" to \"" << high << "\":" << std::endl;
+                bool foundVal = false;
+                bool* foundValPtr = &foundVal;
+                inorderSearch(bstRoot, low, high, foundValPtr);
+                if (!*foundValPtr) {
+                    std::cout << '\t' << "No occupations found in the given range" << std::endl;
+                }
             } else { // first line, number of query
                 k = getIntFromString(line);
             }

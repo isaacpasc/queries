@@ -12,7 +12,7 @@
 
 
 
-bst* BUILD_BST(std::string year, hash_table_entry* hashTable) {
+bst* BUILD_BST(std::string year) {
     std::ifstream inFile;
     std::string fileName = "Occupation-Dist-All-" + year + ".csv";
     inFile.open(fileName);
@@ -150,11 +150,15 @@ bst* bstInsert(SOC node, bst* root) {
     return root;
 }
 
-void inorder(bst* root) {
+void inorderSearch(bst* root, std::string low, std::string high, bool* foundVal) {
     if (!root) {
         return;
     }
-    inorder(root->left);
-    std::cout << "START OCCUPATION- " << root->soc.occupation << " -END OCCUPATION" << std::endl;
-    inorder(root->right);
+    inorderSearch(root->left, low, high, foundVal);
+    if (std::strcmp(root->soc.occupation, high.c_str()) <= 0 &&  std::strcmp(root->soc.occupation, low.c_str()) >= 0) {
+        std::cout << "\t" << root->soc.occupation << ": YRFT: " << formatWithCommas(root->soc.total) << ", Female: " <<
+        formatWithCommas(root->soc.female) << ", Male: " << formatWithCommas(root->soc.male) << std::endl;
+        *foundVal = true;
+    }
+    inorderSearch(root->right, low, high, foundVal);
 }

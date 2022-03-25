@@ -3,6 +3,7 @@
 //
 
 #include "Utility.h"
+#include "HashTable.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -15,7 +16,7 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
     std::string line;
 
     // skip 5 lines
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1; i++) {
         std::getline(inFile, line);
     }
 
@@ -34,16 +35,19 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
             // check if end of line
             if (i == line.length() - 1) {
                 if (subIndex == 0) {
-
-                    for (int j = 0; j < finalCell.length(); j++) {
-                        heapArr[index].occupation[j] = finalCell[j];
+                    for (int j = 0; j < OCC_LEN; j++) {
+                        if (j >= finalCell.length()) {
+                            heapArr[index].occupation[j] = '\0';
+                        } else {
+                            heapArr[index].occupation[j] = finalCell[j];
+                        }
                     }
                 }
                 if (subIndex == 1) {
                     for (int j = 0; j < CODE_LEN; j++) {
                         heapArr[index].SOC_code[j] = '\0';
                     }
-                    for (int j = 0; j < finalCell.length(); j++) {
+                    for (int j = 0; j < CODE_LEN; j++) {
                         heapArr[index].SOC_code[j] = finalCell[j];
                     }
                 }
@@ -75,9 +79,12 @@ void BUILD_MAX_ARR(std::string year, SOC* heapArr) {
             if (!insideQuote) {
                 if (line[i] == ',') {
                     if (subIndex == 0) {
-                        
-                        for (int j = 0; j < finalCell.length(); j++) {
-                            heapArr[index].occupation[j] = finalCell[j];
+                        for (int j = 0; j < OCC_LEN; j++) {
+                            if (j >= finalCell.length()) {
+                                heapArr[index].occupation[j] = '\0';
+                            } else {
+                                heapArr[index].occupation[j] = finalCell[j];
+                            }
                         }
                     }
                     if (subIndex == 1) {
@@ -160,7 +167,7 @@ void BUILD_EARNINGS_ARR(earnings* earningsArr) {
     std::string line;
 
     // skip 8 lines
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 1; i++) {
         std::getline(inFile, line);
     }
 
@@ -301,4 +308,79 @@ int getHashMapArrLength(std::string year) {
     }
 
     return n;
+}
+
+void inorderBuildHashTable(bst* root, hash_table_entry** hashTable, int m) {
+    if (!root) {
+        return;
+    }
+    inorderBuildHashTable(root->left, hashTable, m);
+    std::string code;
+    for (int i = 0; i < CODE_LEN; i++) {
+        if (root->soc.SOC_code[i] == ',' || root->soc.SOC_code[i] == '&' || i == CODE_LEN - 1) {
+            if (code != " ") { // codes with 3 or more have ", &"
+                insertHash(hashTable, intToSOCCode(socCodeToInt(code)), root, m, socCodeToInt(code));
+            }
+            code = "";
+        } else if (root->soc.SOC_code[i] != '\0') {
+            code += root->soc.SOC_code[i];
+        }
+    }
+    inorderBuildHashTable(root->right, hashTable, m);
+}
+
+int socCodeToInt(std::string soc) {
+    std::string mString;
+    for (int i = 0; i < soc.length(); i++) {
+        if (soc[i] != '\0' && int(soc[i]) > 47 && int(soc[i]) < 58) {
+            mString += soc[i];
+        }
+    }
+    return getIntFromString(mString);
+}
+
+std::string intToSOCCode(int soc) {
+    std::string mString = std::to_string(soc);
+    std::string returnString;
+    returnString += mString[0];
+    returnString += mString[1];
+    returnString += '-';
+    returnString += mString[2];
+    returnString += mString[3];
+    returnString += mString[4];
+    returnString += mString[5];
+    return returnString;
+}
+
+std::string getQuotedRange(std::string args, bool isStart) {
+    std::string returnString;
+    int quoteCount = 0;
+    if (isStart) {
+        // return first quoted word
+        for (int i = 0; i < args.length(); i++) {
+            if (quoteCount == 2) {
+                return returnString;
+            }
+            if (args[i] == '"') {
+                quoteCount++;
+                continue;
+            }
+            returnString += args[i];
+        }
+    } else {
+        // return second quoted word
+        for (int i = 0; i < args.length(); i++) {
+            if (quoteCount == 4) {
+                return returnString;
+            }
+            if (args[i] == '"') {
+                quoteCount++;
+                continue;
+            }
+            if (quoteCount == 3) {
+                returnString += args[i];
+            }
+        }
+    }
+    return returnString;
 }
