@@ -19,7 +19,7 @@ bst* BUILD_BST(std::string year) {
     std::string line;
 
     // skip 5 lines
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 1; i++) {
         std::getline(inFile, line);
     }
 

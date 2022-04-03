@@ -293,7 +293,7 @@ int getHashMapArrLength(std::string year) {
     n = n + 1;
 
     // skip 5 lines
-    n = n - 5;
+    n = n - 1;
 
     n = n * 3;
     n = n + 1;
